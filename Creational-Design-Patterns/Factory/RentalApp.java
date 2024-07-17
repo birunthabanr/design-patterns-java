@@ -48,7 +48,7 @@ class TruckRentalService extends VehicleRentalService {
     }
 }
 
-// // Client cod
+// // Client code
 // public class RentalApp {
 //     public static void rentVehicle(VehicleRentalService rentalService) {
 //         Vehicle vehicle = rentalService.createVehicle();
