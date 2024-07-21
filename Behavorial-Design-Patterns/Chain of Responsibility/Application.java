@@ -1,4 +1,3 @@
-
 interface ComponentWithContextualHelp {
     void showHelp();
 }
