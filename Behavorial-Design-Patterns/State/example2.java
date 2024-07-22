@@ -17,8 +17,7 @@ class ReadyState extends State {
         super(player);
     }
 
-    public void clickLock() {
-        
+    public void clickLock() {       
     }
 
     void clickPlay() {
@@ -132,5 +131,6 @@ public class example2 {
         player.clickPrevious();
         player.clickLock();
         player.clickPlay();
+        player.previousSong();
     }
 }
