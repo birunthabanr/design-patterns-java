@@ -1,5 +1,3 @@
-package refactoring_guru.facade.example.some_complex_media_library;
-
 public class VideoFile {
     private String name;
     private String codecType;
