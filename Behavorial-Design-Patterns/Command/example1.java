@@ -1,10 +1,12 @@
 import java.util.List;
 import java.util.ArrayList;
 
+// command interface
 interface Order {
     void execute();
 }
 
+// concrete command
 class Meal implements Order {
     private String meal;
     private Type type;
@@ -23,6 +25,7 @@ class Meal implements Order {
     }
 }
 
+// invoker class
 class Waiter {
     private List<Order> orders = new ArrayList<>();
 
@@ -41,6 +44,7 @@ class Waiter {
     }
 }
 
+// Receiver class
 class Type {
     public void cook(String meal) {
         System.out.println("Chef: Cooking " + meal);
