@@ -1,0 +1,1 @@
+chatMediator.addUser(user1);
