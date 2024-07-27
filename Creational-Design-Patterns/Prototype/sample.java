@@ -72,6 +72,8 @@ public class sample {
         ConcretePrototype2 clone2 = (ConcretePrototype2) prototype2.clone();
 
         // Display clones
+        System.out.println(prototype1);
+        System.out.println(prototype2);
         System.out.println(clone1);
         System.out.println(clone2);
     }

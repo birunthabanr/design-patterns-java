@@ -76,7 +76,7 @@ interface Builder {
 
     @Override
     public void setSeats(int number) {
-        this.car.setSeats(number);
+        car.setSeats(number);
     }
 
     @Override
@@ -171,5 +171,9 @@ public class Application {
         director.constructSportsCar(manualBuilder);
         Manual manual = manualBuilder.getProduct();
         System.out.println(manual);
+
+        director.constructSUV(carBuilder);
+        Car car2 = carBuilder.getProduct();
+        System.out.println(car2);
     }
 }
