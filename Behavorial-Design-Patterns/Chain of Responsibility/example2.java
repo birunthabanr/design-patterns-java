@@ -34,7 +34,6 @@ abstract class AuthenticationHandler {
 
 }
 
-
 class UserExistsHandler extends AuthenticationHandler {
     private java.util.Map<String, User> usersDatabase;
 
