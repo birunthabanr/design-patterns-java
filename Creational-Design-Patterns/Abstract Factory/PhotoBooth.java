@@ -1,13 +1,10 @@
 class Image {
-    
     public Image() {}
-    
     public Image(String fname) {}
-    
 }
 
-    // These generic abstract interfaces for Filters are
-    // created for use by abstract Factory
+// These generic abstract interfaces for Filters are
+// created for use by abstract Factory
 interface BlurFilter {
     public Image apply(Image img);
 }
@@ -111,11 +108,15 @@ public class PhotoBooth {
     }
 
     public static void main(String [] args) {
+       
         // Use a concrete Filter Factory instance
         FilterFactory3X3 ff = new FilterFactory3X3();
+       
         // Create a Photo Booth with specific Filter Factory
         PhotoBooth pb = new PhotoBooth(ff);
+       
         Image lena = new Image("lena.jpg");
+      
         lena = pb.sharpen(lena);
         lena = pb.edgeDetect(lena);
         lena = pb.blur(lena);
