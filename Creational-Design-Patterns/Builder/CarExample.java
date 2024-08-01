@@ -37,6 +37,15 @@ class Car {
         this.model = model;
         this.color = color;
     }
+
+    public String toString() {
+        return "Car{" +
+               "id=" + id +
+               ", brand='" + brand + '\'' +
+               ", model='" + model + '\'' +
+               ", color='" + color + '\'' +
+               '}';
+    }
 }
 
 
