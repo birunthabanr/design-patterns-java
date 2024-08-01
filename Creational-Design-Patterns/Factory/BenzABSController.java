@@ -38,7 +38,7 @@ abstract class ABSController {
 // factory method, makeABSSensor() to specialize itself.
 class CarABSController extends ABSController {
     public ABSSensor makeABSSensor() {
-        log("Making a Car ABS Sensor");
+        // log("Making a Car ABS Sensor");
         return new CarABSSensor();
     }
 }
