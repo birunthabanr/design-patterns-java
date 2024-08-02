@@ -7,21 +7,26 @@
 * Deepthika K.A.E.R. - 220107G
 * Dharmakeerthi D.H.N. - 220117L
 */
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
+
 class Console {
 /**
 * Prints a message to the console with a specified color.
 * @param message The message to print.
 * @param color The color to print the message in.
 */
+
 public static void print(String message, String color) {
 System.out.println(color + message + "\u001B[0m");
 }
+
 /**
 * Prints a warning message to the console in yellow.
 * @param message The warning message to print.
@@ -61,141 +66,152 @@ super("Print File Type Not Supported");
 * PrintJob class represents a print job that can be sent to the printer.
 */
 class PrintJob {
-final String content;
-final String type;
-public static final PrintJob END_OF_JOBS = new PrintJob("END", "END");
-public PrintJob(String content, String type) {
-this.content = content;
-this.type = type;
-}
-private boolean checkSupported() {
-// check if the printer supports the type of the print job
-return type.equals("pdf") ||
-type.equals("docx") ||
-type.equals("pptx") ||
-type.equals("png") ||
-type.equals("jpg") ||
-type.equals("txt");
-}
-public String prepareContent() throws TypeNotSupportedException {
-// prepare the content of the print job based on the type
-// if the type is not supported, throw a TypeNotSupportedException
-if (!checkSupported()) throw new TypeNotSupportedException();
-return "Preparing content for " + content + " of type " + type;
-}
-public int getPrintDuration() throws TypeNotSupportedException {
-// return the print duration based on the type of the print job
-// if the type is not supported, throw a TypeNotSupportedException
-if (!checkSupported()) throw new TypeNotSupportedException();
-switch (type) {
-case "pdf":
-return 1000;
-case "docx":
-return 2000;
-case "pptx":
-return 4000;
-case "png":
-return 2500;
-case "jpg":
-return 3000;
-default:
-return 2000;
-}
-}
+    final String content;
+    final String type;
+    
+    public static final PrintJob END_OF_JOBS = new PrintJob("END", "END");
+    
+    public PrintJob(String content, String type) {
+        this.content = content;
+        this.type = type;
+    }
+    
+    private boolean checkSupported() {
+    // check if the printer supports the type of the print job
+        return type.equals("pdf") ||
+            type.equals("docx") ||
+            type.equals("pptx") ||
+            type.equals("png") ||
+            type.equals("jpg") ||
+            type.equals("txt");
+    }
+    public String prepareContent() throws TypeNotSupportedException {
+    // prepare the content of the print job based on the type
+    // if the type is not supported, throw a TypeNotSupportedException
+        if (!checkSupported()) throw new TypeNotSupportedException();
+        return "Preparing content for " + content + " of type " + type;
+    }
+    
+    public int getPrintDuration() throws TypeNotSupportedException {
+    // return the print duration based on the type of the print job
+    // if the type is not supported, throw a TypeNotSupportedException
+    if (!checkSupported()) throw new TypeNotSupportedException();
+    
+    switch (type) {
+        case "pdf":
+            return 1000;
+        case "docx":
+            return 2000;
+        case "pptx":
+            return 4000;
+        case "png":
+            return 2500;
+        case "jpg":
+            return 3000;
+        default:
+            return 2000;
+        }
+    }
 }
 /*
 * TextFile class represents a text file that can be read from the disk.
 */
 class TextFile {
-final String content;
-public TextFile(String content) {
-this.content = content;
+    final String content;
+    public TextFile(String content) {
+        this.content = content;
+    }
 }
-}
+
+
 class Computer implements Runnable {
-private final SharedQueue queue;
-private final List<PrintJob> jobs;
-public Computer(SharedQueue queue, List<PrintJob> jobs) {
-this.queue = queue;
-this.jobs = jobs;
+    private final SharedQueue queue;
+    private final List<PrintJob> jobs;
+    public Computer(SharedQueue queue, List<PrintJob> jobs) {
+    this.queue = queue;
+    this.jobs = jobs;
+    }
+    @Override
+    public void run() {
+        try {
+            for (PrintJob job : jobs) {
+                try {
+                    // Prepare the content of the print job
+                    job.prepareContent();
+                } catch (TypeNotSupportedException e) {
+                    Console.printError(Thread.currentThread().getName() + " - " +
+                    e.getMessage());
+                    continue; // skip the print job if the type is not supported
+                }
+                // Enqueue a print job to the queue
+                Console.printInfo(Thread.currentThread().getName() + " adding print job - " +
+                job.content);
+                queue.add(job);
+                // random sleep time between 1 and 5 seconds
+                // To simulate the users sending print jobs at random times
+                Thread.sleep((long) (Math.random() * 4000) + 1000);
+            }
+        
+            queue.add(PrintJob.END_OF_JOBS); // add end signal after all jobs are added
+        
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }
-@Override
-public void run() {
-try {
-for (PrintJob job : jobs) {
-try {
-// Prepare the content of the print job
-job.prepareContent();
-} catch (TypeNotSupportedException e) {
-Console.printError(Thread.currentThread().getName() + " - " +
-e.getMessage());
-continue; // skip the print job if the type is not supported
-}
-// Enqueue a print job to the queue
-Console.printInfo(Thread.currentThread().getName() + " adding print job - " +
-job.content);
-queue.add(job);
-// random sleep time between 1 and 5 seconds
-// To simulate the users sending print jobs at random times
-Thread.sleep((long) (Math.random() * 4000) + 1000);
-}
-queue.add(PrintJob.END_OF_JOBS); // add end signal after all jobs are added
-} catch (InterruptedException e) {
-Thread.currentThread().interrupt();
-}
-}
-}
+
+
 class WebInterface implements Runnable {
-private final SharedQueue queue;
-public WebInterface(SharedQueue queue) {
-this.queue = queue;
-}
-public static TextFile readAFile(String filePath) throws IOException {
-StringBuilder stringBuilder = new StringBuilder();
-// read the file line by line and append it to the StringBuilder
-try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-String line;
-while ((line = reader.readLine()) != null) {
-stringBuilder.append(line).append("\n");
-}
-}
-return new TextFile(stringBuilder.toString());
-}
-@Override
-public void run() {
-// text files text1.txt, text2.txt
-String[] files = {
-"shine_printers/text1.txt",
-"shine_printers/text2.txt"
-};
-try {
-for (String file : files) {
-try {
-TextFile textFile = readAFile(file);
-PrintJob job = new PrintJob(textFile.content, "txt");
-// Prepare the content of the print job
-job.prepareContent();
-// Enqueue a print job to the queue
-Console.printInfo(Thread.currentThread().getName() + " adding web interface job - " + file);
-queue.add(job);
-// random sleep time between 1 and 5 seconds
-// To simulate the users sending print jobs at random times
-Thread.sleep((long) (Math.random() * 4000) + 1000);
-} catch (TypeNotSupportedException e) {
-Console.printError(Thread.currentThread().getName() + " - " +
-e.getMessage());
-continue; // skip the print job if the type is not supported
-} catch (IOException e) {
-Console.printError(Thread.currentThread().getName() + " - " +
-e.getMessage());
-continue; // skip the print job if the file cannot be read
-}
-}
-queue.add(PrintJob.END_OF_JOBS); // add end signal after all jobs are added
-} catch (InterruptedException e) {
-Thread.currentThread().interrupt();
-}
-}
+    private final SharedQueue queue;
+    public WebInterface(SharedQueue queue) {
+        this.queue = queue;
+    }
+    public static TextFile readAFile(String filePath) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        // read the file line by line and append it to the StringBuilder
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line).append("\n");
+            }
+        }
+        return new TextFile(stringBuilder.toString());
+    }
+    @Override
+    public void run() {
+    // text files text1.txt, text2.txt
+    String[] files = {
+        "shine_printers/text1.txt",
+        "shine_printers/text2.txt"
+    };
+    try {
+    for (String file : files) {
+    try {
+    TextFile textFile = readAFile(file);
+    PrintJob job = new PrintJob(textFile.content, "txt");
+    // Prepare the content of the print job
+    job.prepareContent();
+    // Enqueue a print job to the queue
+    Console.printInfo(Thread.currentThread().getName() + " adding web interface job - " + file);
+    queue.add(job);
+    // random sleep time between 1 and 5 seconds
+    // To simulate the users sending print jobs at random times
+    Thread.sleep((long) (Math.random() * 4000) + 1000);
+    } catch (TypeNotSupportedException e) {
+    Console.printError(Thread.currentThread().getName() + " - " +
+    e.getMessage());
+    continue; // skip the print job if the type is not supported
+    } catch (IOException e) {
+    Console.printError(Thread.currentThread().getName() + " - " +
+    e.getMessage());
+    continue; // skip the print job if the file cannot be read
+    }
+    }
+    queue.add(PrintJob.END_OF_JOBS); // add end signal after all jobs are added
+    } catch (InterruptedException e) {
+    Thread.currentThread().interrupt();
+    }
+    }
 }
 class Printer implements Runnable {
 private final SharedQueue queue;
