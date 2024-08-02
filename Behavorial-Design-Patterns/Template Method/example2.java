@@ -16,3 +16,17 @@ abstract class DataParser {
         System.out.println("Writing data to output.");
     }
 }
+
+
+class CSVParser extends DataParser {
+
+    @Override
+    void readData() {
+        System.out.println("Reading data from a CSV file.");
+    }
+
+    @Override
+    void processData() {
+        System.out.println("Processing CSV data.");
+    }
+}
