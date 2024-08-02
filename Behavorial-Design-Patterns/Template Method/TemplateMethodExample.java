@@ -43,3 +43,16 @@ class XMLParser extends DataParser {
         System.out.println("Processing XML data.");
     }
 }
+
+public class TemplateMethodExample {
+
+    public static void main(String[] args) {
+        DataParser csvParser = new CSVParser();
+        csvParser.parseData();
+
+        System.out.println();
+
+        DataParser xmlParser = new XMLParser();
+        xmlParser.parseData();
+    }
+}
