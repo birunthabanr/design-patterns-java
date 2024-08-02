@@ -9,15 +9,15 @@ interface Order {
 // concrete command
 class Meal implements Order {
     private String meal;
-    private Type type;
+    private Chef chef;
 
-    public Meal(String meal, Type type) {
+    public Meal(String meal, Chef chef) {
         this.meal=meal;
-        this.type=type;
+        this.chef=chef;
     }
 
     public void execute() {
-        type.cook(meal);
+        chef.cook(meal);
     }
 
     public String getMeal() {
@@ -45,7 +45,7 @@ class Waiter {
 }
 
 // Receiver class
-class Type {
+class Chef {
     public void cook(String meal) {
         System.out.println("Chef: Cooking " + meal);
     }
@@ -54,10 +54,10 @@ class Type {
 
 public class example1 {
     public static void main(String[] args) {
-        Type type = new Type();
+        Chef chef = new Chef();
         Waiter waiter = new Waiter();
 
-        Order order1 = new Meal("Pasta", type);
+        Order order1 = new Meal("Pasta", chef);
 
         waiter.takeOrder(order1);
 
