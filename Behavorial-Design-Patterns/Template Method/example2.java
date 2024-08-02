@@ -30,3 +30,16 @@ class CSVParser extends DataParser {
         System.out.println("Processing CSV data.");
     }
 }
+
+class XMLParser extends DataParser {
+
+    @Override
+    void readData() {
+        System.out.println("Reading data from an XML file.");
+    }
+
+    @Override
+    void processData() {
+        System.out.println("Processing XML data.");
+    }
+}
