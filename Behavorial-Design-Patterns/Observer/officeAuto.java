@@ -52,5 +52,14 @@ class lightSensors {
 }
 
 public class officeAuto {
+    public static void main(String[] args) {
+        lightSensors sensor = new lightSensors(50);
+
+        lightListener light = new lightListener("On");
+
+        sensor.add(light);
+
+        sensor.setLightLevel("20");
+    }
     
 }
