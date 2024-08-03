@@ -56,12 +56,18 @@ public static void printInfo(String message) {
 print(message, "\u001B[34m");
 }
 }
+
+
+
+
 // Custom exception to be thrown when the type of the print job is not supported
 class TypeNotSupportedException extends Exception {
-public TypeNotSupportedException() {
-super("Print File Type Not Supported");
+        public TypeNotSupportedException() {
+            super("Print File Type Not Supported");
+        }
 }
-}
+
+
 /*
 * PrintJob class represents a print job that can be sent to the printer.
 */
@@ -177,164 +183,191 @@ class WebInterface implements Runnable {
         }
         return new TextFile(stringBuilder.toString());
     }
+    
     @Override
     public void run() {
-    // text files text1.txt, text2.txt
-    String[] files = {
-        "shine_printers/text1.txt",
-        "shine_printers/text2.txt"
-    };
-    try {
-    for (String file : files) {
-    try {
-    TextFile textFile = readAFile(file);
-    PrintJob job = new PrintJob(textFile.content, "txt");
-    // Prepare the content of the print job
-    job.prepareContent();
-    // Enqueue a print job to the queue
-    Console.printInfo(Thread.currentThread().getName() + " adding web interface job - " + file);
-    queue.add(job);
-    // random sleep time between 1 and 5 seconds
-    // To simulate the users sending print jobs at random times
-    Thread.sleep((long) (Math.random() * 4000) + 1000);
-    } catch (TypeNotSupportedException e) {
-    Console.printError(Thread.currentThread().getName() + " - " +
-    e.getMessage());
-    continue; // skip the print job if the type is not supported
-    } catch (IOException e) {
-    Console.printError(Thread.currentThread().getName() + " - " +
-    e.getMessage());
-    continue; // skip the print job if the file cannot be read
-    }
-    }
-    queue.add(PrintJob.END_OF_JOBS); // add end signal after all jobs are added
-    } catch (InterruptedException e) {
-    Thread.currentThread().interrupt();
-    }
+        // text files text1.txt, text2.txt
+        String[] files = {
+            "shine_printers/text1.txt",
+            "shine_printers/text2.txt"
+        };
+        try {
+            for (String file : files) {
+                try {
+                    TextFile textFile = readAFile(file);
+                    PrintJob job = new PrintJob(textFile.content, "txt");
+                    // Prepare the content of the print job
+                    job.prepareContent();
+                    // Enqueue a print job to the queue
+                    Console.printInfo(Thread.currentThread().getName() + " adding web interface job - " + file);
+                    queue.add(job);
+                    // random sleep time between 1 and 5 seconds
+                    // To simulate the users sending print jobs at random times
+                    Thread.sleep((long) (Math.random() * 4000) + 1000);
+                } catch (TypeNotSupportedException e) {
+                    Console.printError(Thread.currentThread().getName() + " - " +
+                    e.getMessage());
+                    continue; // skip the print job if the type is not supported
+                } catch (IOException e) {
+                    Console.printError(Thread.currentThread().getName() + " - " +
+                    e.getMessage());
+                    continue; // skip the print job if the file cannot be read
+                }
+            }
+            queue.add(PrintJob.END_OF_JOBS); // add end signal after all jobs are added
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
+
+
 class Printer implements Runnable {
-private final SharedQueue queue;
-public Printer(SharedQueue queue) {
-this.queue = queue;
+    private final SharedQueue queue;
+    public Printer(SharedQueue queue) {
+        this.queue = queue;
+    }
+
+    @Override
+    public void run() {
+        try {
+            while (true) {
+                // Dequeue a print job from the queue
+                PrintJob job = queue.remove();
+
+                if (job == PrintJob.END_OF_JOBS) {
+                    break; // break loop if end signal is encountered
+                }
+                Console.printWarning(Thread.currentThread().getName() + " printing - " + job.content);
+
+                // sleep to simulate the printer printing the job
+                // throw a TypeNotSupportedException if the type is not supported
+                try {
+                    int duration = job.getPrintDuration();
+                    Thread.sleep(duration);
+                    Console.printSuccess(Thread.currentThread().getName() + " finished - " + job.content);
+                } catch (TypeNotSupportedException e) {
+                    Console.printError(Thread.currentThread().getName() + " - " + e.getMessage());
+                }
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }
-@Override
-public void run() {
-try {
-while (true) {
-// Dequeue a print job from the queue
-PrintJob job = queue.remove();
-if (job == PrintJob.END_OF_JOBS) {
-break; // break loop if end signal is encountered
-}
-Console.printWarning(Thread.currentThread().getName() + " printing - " +
-job.content);
-// sleep to simulate the printer printing the job
-// throw a TypeNotSupportedException if the type is not supported
-try {
-int duration = job.getPrintDuration();
-Thread.sleep(duration);
-Console.printSuccess(Thread.currentThread().getName() + " finished - " +
-job.content);
-} catch (TypeNotSupportedException e) {
-Console.printError(Thread.currentThread().getName() + " - " +
-e.getMessage());
-}
-}
-} catch (InterruptedException e) {
-Thread.currentThread().interrupt();
-}
-}
-}
+
+
 /*
 * SharedQueue class represents a shared queue that can be accessed by multiple threads.
 */
 class SharedQueue {
-private final List<PrintJob> queue;
-private final int capacity;
-public SharedQueue(int capacity) {
-this.queue = new LinkedList<>();
-this.capacity = capacity;
+    private final List<PrintJob> queue;
+    private final int capacity;
+    
+    public SharedQueue(int capacity) {
+        this.queue = new LinkedList<>();
+        this.capacity = capacity;
+    }
+
+    public synchronized void add(PrintJob job) throws InterruptedException {
+        // wait until there is space in the queue
+        while (queue.size() == capacity) {
+            wait();
+        }
+
+        // add the job to the queue
+        queue.add(job);
+        notifyAll();
+    }
+
+    public synchronized PrintJob remove() throws InterruptedException {
+        // wait until there is a job in the queue
+        while (queue.isEmpty()) {
+            wait();
+        }
+        // remove and return the first job in the queue
+        PrintJob job = queue.remove(0);
+        notifyAll();
+        return job;
+    }
 }
-public synchronized void add(PrintJob job) throws InterruptedException {
-// wait until there is space in the queue
-while (queue.size() == capacity) {
-wait();
-}
-// add the job to the queue
-queue.add(job);
-notifyAll();
-}
-public synchronized PrintJob remove() throws InterruptedException {
-// wait until there is a job in the queue
-while (queue.isEmpty()) {
-wait();
-}
-// remove and return the first job in the queue
-PrintJob job = queue.remove(0);
-notifyAll();
-return job;
-}
-}
+
 public class Main {
-public static void main(String[] args) {
-// Create a shared queue with a capacity of 5
-SharedQueue queue = new SharedQueue(5);
-List<PrintJob> jobs1 = Arrays.asList(
-new PrintJob("DOCX from Computer 1", "docx"),
-new PrintJob("JPG from Computer 1", "jpg"),
-new PrintJob("PPTX from Computer 1", "pptx"),
-new PrintJob("DOCX from Computer 1", "docx"),
-new PrintJob("PNG from Computer 1", "png"),
-new PrintJob("MP3 from Computer 1", "mp3"),
-new PrintJob("PPTX from Computer 1", "pptx"),
-new PrintJob("DOCX from Computer 1", "docx")
-);
-Thread computer1 = new Thread(new Computer(queue, jobs1), "Computer 1");
-List<PrintJob> jobs2 = Arrays.asList(
-new PrintJob("PNG from Computer 2", "png"),
-new PrintJob("ZIP from Computer 2", "zip"),
-new PrintJob("PDF from Computer 2", "pdf"),
-new PrintJob("PDF from Computer 2", "pdf"),
-new PrintJob("JPG from Computer 2", "jpg"),
-new PrintJob("DOCX from Computer 2", "docx"),
-new PrintJob("PPTX from Computer 2", "pptx")
-);
-Thread computer2 = new Thread(new Computer(queue, jobs2), "Computer 2");
-List<PrintJob> jobs3 = Arrays.asList(
-new PrintJob("PDF from Computer 3", "pdf"),
-new PrintJob("ZIP from Computer 3", "zip"),
-new PrintJob("PNG from Computer 3", "png"),
-new PrintJob("MP4 from Computer 3", "mp4"),
-new PrintJob("PDF from Computer 3", "pdf"),
-new PrintJob("MP3 from Computer 3", "mp3"),
-new PrintJob("DOCX from Computer 3", "docx"),
-new PrintJob("PDF from Computer 3", "pdf")
-);
-Thread computer3 = new Thread(new Computer(queue, jobs3), "Computer 3");
-Thread printer1 = new Thread(new Printer(queue), "Printer 1");
-Thread printer2 = new Thread(new Printer(queue), "Printer 2");
-Thread webInterface = new Thread(new WebInterface(queue), "Web Interface");
-// Start 3 Computer threads
-computer1.start();
-computer2.start();
-computer3.start();
-// Start 2 Printer threads
-printer1.start();
-printer2.start();
-// Start Web Interface thread
-webInterface.start();
-// print success message when all threads are done
-try {
-computer1.join();
-computer2.join();
-computer3.join();
-printer1.join();
-printer2.join();
-webInterface.join();
-Console.printSuccess("\nAll Print Jobs Completed!");
-} catch (InterruptedException e) {
-Thread.currentThread().interrupt();
-}
-}
+    public static void main(String[] args) {
+    // Create a shared queue with a capacity of 5
+    SharedQueue queue = new SharedQueue(5);
+    List<PrintJob> jobs1 = Arrays.asList(
+        new PrintJob("DOCX from Computer 1", "docx"),
+        new PrintJob("JPG from Computer 1", "jpg"),
+        new PrintJob("PPTX from Computer 1", "pptx"),
+        new PrintJob("DOCX from Computer 1", "docx"),
+        new PrintJob("PNG from Computer 1", "png"),
+        new PrintJob("MP3 from Computer 1", "mp3"),
+        new PrintJob("PPTX from Computer 1", "pptx"),
+        new PrintJob("DOCX from Computer 1", "docx")
+    );
+
+    Thread computer1 = new Thread(new Computer(queue, jobs1), "Computer 1");
+    List<PrintJob> jobs2 = Arrays.asList(
+        new PrintJob("PNG from Computer 2", "png"),
+        new PrintJob("ZIP from Computer 2", "zip"),
+        new PrintJob("PDF from Computer 2", "pdf"),
+        new PrintJob("PDF from Computer 2", "pdf"),
+        new PrintJob("JPG from Computer 2", "jpg"),
+        new PrintJob("DOCX from Computer 2", "docx"),
+        new PrintJob("PPTX from Computer 2", "pptx")
+    );
+
+    Thread computer2 = new Thread(new Computer(queue, jobs2), "Computer 2");
+    List<PrintJob> jobs3 = Arrays.asList(
+        new PrintJob("PDF from Computer 3", "pdf"),
+        new PrintJob("ZIP from Computer 3", "zip"),
+        new PrintJob("PNG from Computer 3", "png"),
+        new PrintJob("MP4 from Computer 3", "mp4"),
+        new PrintJob("PDF from Computer 3", "pdf"),
+        new PrintJob("MP3 from Computer 3", "mp3"),
+        new PrintJob("DOCX from Computer 3", "docx"),
+        new PrintJob("PDF from Computer 3", "pdf")
+    );
+
+    Thread computer3 = new Thread(new Computer(queue, jobs3), "Computer 3");
+
+    Thread printer1 = new Thread(new Printer(queue), "Printer 1");
+
+    Thread printer2 = new Thread(new Printer(queue), "Printer 2");
+
+    Thread webInterface = new Thread(new WebInterface(queue), "Web Interface");
+
+    // Start 3 Computer threads
+
+    computer1.start();
+
+    computer2.start();
+
+    computer3.start();
+
+    // Start 2 Printer threads
+
+    printer1.start();
+
+    printer2.start();
+
+    // Start Web Interface thread
+
+    webInterface.start();
+
+    // print success message when all threads are done
+
+    try {
+        computer1.join();
+        computer2.join();
+        computer3.join();
+        printer1.join();
+        printer2.join();
+        webInterface.join();
+        Console.printSuccess("\nAll Print Jobs Completed!");
+    } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        }
+    }
 }

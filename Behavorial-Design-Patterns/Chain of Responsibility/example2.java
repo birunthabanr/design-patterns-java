@@ -23,6 +23,7 @@ class User {
     }
 }
 
+// Handelr interface
 abstract class AuthenticationHandler {
     protected AuthenticationHandler nextHandler;
 
@@ -108,9 +109,16 @@ public class example2 {
 
         // Create a user
         User user = new User("john_doe", "password123", "admin");
+        User user2 = new User("jane_smith", "password456", "user");
 
         // Start the authentication process
         if (userExistsHandler.handle(user)) {
+            System.out.println("User authenticated successfully.");
+        } else {
+            System.out.println("User authentication failed.");
+        }
+
+        if (userExistsHandler.handle(user2)) {
             System.out.println("User authenticated successfully.");
         } else {
             System.out.println("User authentication failed.");
