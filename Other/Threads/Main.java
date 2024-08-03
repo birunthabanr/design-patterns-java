@@ -296,6 +296,7 @@ public class Main {
     public static void main(String[] args) {
     // Create a shared queue with a capacity of 5
     SharedQueue queue = new SharedQueue(5);
+    
     List<PrintJob> jobs1 = Arrays.asList(
         new PrintJob("DOCX from Computer 1", "docx"),
         new PrintJob("JPG from Computer 1", "jpg"),
@@ -306,8 +307,8 @@ public class Main {
         new PrintJob("PPTX from Computer 1", "pptx"),
         new PrintJob("DOCX from Computer 1", "docx")
     );
-
     Thread computer1 = new Thread(new Computer(queue, jobs1), "Computer 1");
+    
     List<PrintJob> jobs2 = Arrays.asList(
         new PrintJob("PNG from Computer 2", "png"),
         new PrintJob("ZIP from Computer 2", "zip"),
@@ -317,8 +318,8 @@ public class Main {
         new PrintJob("DOCX from Computer 2", "docx"),
         new PrintJob("PPTX from Computer 2", "pptx")
     );
-
     Thread computer2 = new Thread(new Computer(queue, jobs2), "Computer 2");
+    
     List<PrintJob> jobs3 = Arrays.asList(
         new PrintJob("PDF from Computer 3", "pdf"),
         new PrintJob("ZIP from Computer 3", "zip"),
@@ -329,35 +330,26 @@ public class Main {
         new PrintJob("DOCX from Computer 3", "docx"),
         new PrintJob("PDF from Computer 3", "pdf")
     );
-
     Thread computer3 = new Thread(new Computer(queue, jobs3), "Computer 3");
 
     Thread printer1 = new Thread(new Printer(queue), "Printer 1");
-
     Thread printer2 = new Thread(new Printer(queue), "Printer 2");
 
     Thread webInterface = new Thread(new WebInterface(queue), "Web Interface");
 
     // Start 3 Computer threads
-
     computer1.start();
-
     computer2.start();
-
     computer3.start();
 
     // Start 2 Printer threads
-
     printer1.start();
-
     printer2.start();
 
     // Start Web Interface thread
-
     webInterface.start();
 
     // print success message when all threads are done
-
     try {
         computer1.join();
         computer2.join();

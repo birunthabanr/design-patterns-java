@@ -36,6 +36,7 @@ class OutputBin {
     }
 }
 
+//producer class
 class Cooker extends Thread {
     private final OutputBin outputBin;
     private final int id;
@@ -90,8 +91,8 @@ class RobotArm extends Thread {
 
 public class PopcornDispenser {
     public static void main(String[] args) {
-        final int BIN_CAPACITY = 3; // Output bin capacity
-        OutputBin outputBin = new OutputBin(BIN_CAPACITY);
+       // Output bin capacity
+        OutputBin outputBin = new OutputBin(3);
 
         // Create and start two cookers
         Cooker cooker1 = new Cooker(outputBin, 1);
