@@ -22,6 +22,7 @@ public class casting {
         if (animal instanceof Dog) {
             Dog dog = (Dog) animal; // Downcast to Dog
             dog.bark(); // Access subclass-specific method
+            dog.makeSound(); 
         } else {
             System.out.println("The object is not an instance of Dog.");
         }
