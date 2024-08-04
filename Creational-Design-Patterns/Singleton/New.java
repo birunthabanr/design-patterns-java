@@ -1,6 +1,6 @@
 class Database {
     // The field for storing the singleton instance should be declared static.
-    private static volatile Database instance;
+    private static volatile Database instance = new Database();
 
     // The singleton's constructor should always be private to prevent direct construction calls with the `new` operator.
     private Database() {
@@ -36,6 +36,8 @@ public class New {
         // ...
         Database bar = Database.getInstance();
         bar.query("SELECT * FROM orders");
+
+        
         // The variable `bar` will contain the same object as the variable `foo`.
     }
 }
