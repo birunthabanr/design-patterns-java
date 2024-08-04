@@ -1,5 +1,6 @@
 import java.util.*;
 
+// Component Interface
 interface ArmyComponent {
     void receiveOrder(String order);
 }
