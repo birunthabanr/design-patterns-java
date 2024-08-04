@@ -9,6 +9,7 @@ interface Table {
 }
 
 class victorianChair implements Chair {
+    
     public void hasLegs() {
         System.out.println("Has 4 legs");
     }
