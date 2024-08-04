@@ -13,6 +13,7 @@ class UnlockedState implements PhoneState {
 
     @Override
     public void pressButton() {
+        phone.setState(new LockedState(phone));
         System.out.println("Phone is unlocked. Executing various functions...");
     }
 }
@@ -26,6 +27,7 @@ class LockedState implements PhoneState {
 
     @Override
     public void pressButton() {
+        phone.setState(new UnlockedState(phone));
         System.out.println("Phone is locked. Showing unlock screen...");
     }
 }
@@ -84,10 +86,12 @@ public class example1 {
         Phone phone = new Phone();
 
         // Phone is initially locked
-        phone.pressButton();
+        // phone.pressButton();
 
         // Change state to unlocked
         phone.setState(phone.getUnlockedState());
+        phone.pressButton();
+
         phone.pressButton();
 
         // Change state to low charge

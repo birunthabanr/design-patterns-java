@@ -16,9 +16,11 @@ class SimpleSmartCard implements SmartCard {
 // abstract decorator class for smartcard
 abstract class SmartCardDecorator implements SmartCard {
     private final SmartCard smartCardToBeDecorated;
+    
     public SmartCardDecorator(SmartCard smartCardToBeDecorated) {
         this.smartCardToBeDecorated = smartCardToBeDecorated;
     }
+    
     public boolean authenticate(String pin) {
         // delegate the authentication task
         smartCardToBeDecorated.authenticate(pin);
@@ -29,8 +31,7 @@ abstract class SmartCardDecorator implements SmartCard {
 // concrete decorator which add One Time Password
 // capability
 class OTPSmartCardDecorator extends SmartCardDecorator {
-    public OTPSmartCardDecorator
-    (SmartCard smartCardToBeDecorated) {
+    public OTPSmartCardDecorator (SmartCard smartCardToBeDecorated) {
         super(smartCardToBeDecorated);
     }
     public boolean authenticate(String id) {
@@ -45,8 +46,7 @@ class OTPSmartCardDecorator extends SmartCardDecorator {
 // concrete decorator which add Two Factor Authentication
 // capability
 class TFASmartCardDecorator extends SmartCardDecorator {
-    public TFASmartCardDecorator
-    (SmartCard smartCardToBeDecorated) {
+    public TFASmartCardDecorator (SmartCard smartCardToBeDecorated) {
         super(smartCardToBeDecorated);
     }
     public boolean authenticate(String pin) {
