@@ -1,0 +1,1 @@
+Main-class: mystic_mayhem.MysticMayhemGame

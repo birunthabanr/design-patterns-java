@@ -1,0 +1,100 @@
+Battle Ground set to Marshland.
+Phantom Orion vs. GeraltofRivia
+Battle begins...
+
+Turn 1 of 10: Phantom Orion
+Warlock attacks Ranger and gives 5.4 damage.
+Ranger's remaining health: 2.6
+
+Turn 1 of 10: GeraltofRivia
+Warlock attacks Shooter and gives 5.6 damage.
+Shooter's remaining health: 0.4
+
+Turn 2 of 10: Phantom Orion
+Shooter attacks Ranger and gives 4.9 damage.
+Ranger's remaining health: 0.0
+Ranger died!
+
+Turn 2 of 10: GeraltofRivia
+Squire attacks Shooter and gives 3.6 damage.
+Shooter's remaining health: 0.0
+
+Shooter died!
+
+Turn 3 of 10: Phantom Orion
+Squire attacks Medic and gives 3.2 damage.
+Medic's remaining health: 7.8
+
+Turn 3 of 10: GeraltofRivia
+Dragon attacks Soother and gives 4.7 damage.
+Soother's remaining health: 4.3
+
+Turn 4 of 10: Phantom Orion
+Dragon attacks Medic and gives 4.7 damage.
+Medic's remaining health: 3.1
+
+Turn 4 of 10: GeraltofRivia
+Medic (Healer) heals Squire for 1.3 health.
+Squire's remaining health: 7.0
+
+Turn 5 of 10: Phantom Orion
+Soother (Healer) heals Squire for 0.9 health.
+Squire's remaining health: 7.0
+
+Turn 5 of 10: GeraltofRivia
+Warlock attacks Soother and gives 5.2 damage.
+Soother's remaining health: 0.0
+Soother died!
+
+Turn 6 of 10: Phantom Orion
+Warlock attacks Medic and gives 5.2 damage.
+Medic's remaining health: 0.0
+Medic died!
+
+Turn 6 of 10: GeraltofRivia
+Squire attacks Warlock and gives 3.1 damage.
+Warlock's remaining health: 6.9
+
+Turn 7 of 10: Phantom Orion
+Squire attacks Warlock and gives 3.1 damage.
+Warlock's remaining health: 6.9
+
+Turn 7 of 10: GeraltofRivia
+Dragon attacks Warlock and gives 4.6 damage.
+Warlock's remaining health: 2.3
+
+Turn 8 of 10: Phantom Orion
+Dragon attacks Warlock and gives 4.6 damage.
+Warlock's remaining health: 2.3
+
+Turn 8 of 10: GeraltofRivia
+Warlock attacks Warlock and gives 5.1 damage.
+Warlock's remaining health: 0.0
+Warlock died!
+
+Turn 9 of 10: Phantom Orion
+Squire attacks Warlock and gives 3.1 damage.
+Warlock's remaining health: 0.0
+Warlock died!
+
+Turn 9 of 10: GeraltofRivia
+Squire attacks Squire and gives 2.9 damage.
+Squire's remaining health: 4.1
+
+Turn 10 of 10: Phantom Orion
+Dragon attacks Squire and gives 4.4 damage.
+Squire's remaining health: 2.6
+
+Turn 10 of 10: GeraltofRivia
+Dragon attacks Squire and gives 4.4 damage.
+Squire's remaining health: 0.0
+Squire died!
+
+The battle is a draw!
+
+Your Remaining Characters:
+Dragon => 15.0 health
+
+Opponent's Remaining Characters:
+Squire => 2.6 health
+Dragon => 15.0 health
